@@ -25,11 +25,18 @@ const client = new MongoClient(uri, {
       // sdjisokd
 
         const menu= client.db("bistroDb").collection("menu");
+        const reviews= client.db("bistroDb").collection("reviews");
 
 
       await client.connect();
 
 
+
+      app.get('/reviews', async(req,res)=>{
+        console.log("hitting for reviews")
+        const result = await reviews.find().toArray();
+        res.send(result)
+      })
 
       app.get('/menu',async(req,res)=>{
         console.log("hitting for menu")
