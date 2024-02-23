@@ -32,7 +32,7 @@ const client = new MongoClient(uri, {
 
 
       app.get('/menu',async(req,res)=>{
-        // console.log(menu)
+        console.log("hitting for menu")
         const result = await menu.find().toArray();
         res.send(result)
       })
