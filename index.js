@@ -26,6 +26,7 @@ const client = new MongoClient(uri, {
 
         const menu= client.db("bistroDb").collection("menu");
         const reviews= client.db("bistroDb").collection("reviews");
+        const cart= client.db("bistroDb").collection("cart");
 
 
       await client.connect();
@@ -43,6 +44,20 @@ const client = new MongoClient(uri, {
         const result = await menu.find().toArray();
         res.send(result)
       })
+
+      // Cart data 
+      app.post('/carts',async(req,res)=>{
+        const itemToAdd= req.body;
+        const result= await cart.insertOne(itemToAdd);
+        res.send(result)
+
+      })
+
+
+
+
+
+
       // Send a ping to confirm a successful connection
       await client.db("admin").command({ ping: 1 });
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
