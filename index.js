@@ -2,7 +2,7 @@ const express = require('express');
 // app.use(express()
 const app = express();  
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const Port = process.env.PORT || 5000;
 
 
@@ -46,11 +46,32 @@ const client = new MongoClient(uri, {
       })
 
       // Cart data 
+      app.get('/carts',async(req,res)=>{
+        const email = req.query.email;
+        console.log(email)
+        const query={
+          emailId : email
+        }
+        const result =await cart.find(query).toArray();
+        res.send(result)
+      })
       app.post('/carts',async(req,res)=>{
         const itemToAdd= req.body;
         const result= await cart.insertOne(itemToAdd);
         res.send(result)
 
+      })
+// this is a get operation but using post for getting data
+      app.post('/cart/information',async(req,res)=>{
+        const target=req.body;
+        console.log("testing",target)
+        // const targetIDs= target.map(item=> new ObjectId(item))
+        // console.log('this is target',targetIDs)
+         
+         const result =await menu.find({ _id: { $in : target } }).toArray()
+         console.log(result)
+         res.send(result)
+        
       })
 
 
