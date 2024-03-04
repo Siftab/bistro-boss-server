@@ -61,6 +61,12 @@ const client = new MongoClient(uri, {
         res.send(result)
 
       })
+      app.delete('/cart/:id',async(req,res)=>{
+        const id = req.params.id;
+        console.log(id)
+        const result = await cart.deleteOne({itemId: id})
+        res.send(result)
+      })
 // this is a get operation but using post for getting data
       app.post('/cart/information',async(req,res)=>{
         const target=req.body;
