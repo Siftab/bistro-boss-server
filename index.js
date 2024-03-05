@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {
       // Connect the client to the server	(optional starting in v4.7)
       // sdjisokd
 
+        const userCollection= client.db("bistroDb").collection("users");
         const menu= client.db("bistroDb").collection("menu");
         const reviews= client.db("bistroDb").collection("reviews");
         const cart= client.db("bistroDb").collection("cart");
@@ -78,6 +79,17 @@ const client = new MongoClient(uri, {
          console.log(result)
          res.send(result)
         
+      })
+
+      // User APis 
+      app.post('/user',async(req,res)=>{
+        const user = req.body;
+        const existence= await userCollection.findOne({userEmail: user.userEmail})
+        if(existence){
+          return res.send({massage:'user exists' ,insertedId:null})
+        }
+        const result =await userCollection.insertOne(user)
+        res.send(result)
       })
 
 
