@@ -82,6 +82,10 @@ const client = new MongoClient(uri, {
       })
 
       // User APis 
+      app.get('/users',async(req,res)=>{
+        const result = await userCollection.find().toArray();
+        res.send(result)
+      })
       app.post('/user',async(req,res)=>{
         const user = req.body;
         const existence= await userCollection.findOne({userEmail: user.userEmail})
