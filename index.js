@@ -1,6 +1,7 @@
 const express = require('express');
 // app.use(express()
 const app = express();  
+const jwt = require('jsonwebtoken')
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const Port = process.env.PORT || 5000;
@@ -102,6 +103,20 @@ const client = new MongoClient(uri, {
         const result =await userCollection.insertOne(user)
         res.send(result)
       })
+      // UserApi to make Admin 
+      app.patch('/user/Admin/:id',async(req,res)=>{
+        const id=req.params.id;
+        const filter = {
+          _id:new ObjectId(id)
+        }
+        const updatedDoc= {
+          $set:{
+            role:"Admin"
+          }
+        }
+        const result= await userCollection.updateOne(filter,updatedDoc)
+        res.send(result)
+      })
 
 
 
@@ -119,6 +134,14 @@ const client = new MongoClient(uri, {
   run().catch(console.dir);
 app.get('/',(req,res)=>{
     res.send("Bistro boss on the ways ")
+})
+
+
+// jwt APis
+app.post('/jwt',(req,res)=>{
+  const user=req.body;
+  const token = jwt.sign(user,process.env.SECRET_TOKEN,{expiresIn:'1h'})
+  res.send({token})
 })
 app.listen(Port ,()=>{  
     console.log(`boss stting on the server on Port ${Port} `)
