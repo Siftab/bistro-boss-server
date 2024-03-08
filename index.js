@@ -81,10 +81,28 @@ const client = new MongoClient(uri, {
          res.send(result)
         
       })
+      // Custom middle wear 
+      const VerifyToken =(req,res,next)=>{
+        const token =req.headers.authorization.split(' ')[1];
+        if(!req.headers.authorization){
+          res.status(401).send({massage:"forbiden Access"})
+        }
+        jwt.verify(token,process.env.SECRET_TOKEN,(err,decoded)=>{
+          if(err){
+            return res.status(401).send({massage:"forbiden Access"})
+     }    
+      req.decoded=decoded
+      console.log(decoded)
+      next()
+        })
+          
+        // next();
+      }
 
       // User APis 
 
-      app.get('/users',async(req,res)=>{
+      app.get('/users',VerifyToken,async(req,res)=>{
+        // console.log(req.headers)
         const result = await userCollection.find().toArray();
         res.send(result)
       })
