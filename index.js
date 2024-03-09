@@ -89,11 +89,14 @@ const client = new MongoClient(uri, {
         }
         jwt.verify(token,process.env.SECRET_TOKEN,(err,decoded)=>{
           if(err){
+            console.log(" your token not match ")
             return res.status(401).send({massage:"forbiden Access"})
      }    
+     else{
       req.decoded=decoded
       console.log(decoded)
       next()
+     }
         })
           
         // next();
