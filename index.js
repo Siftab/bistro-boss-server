@@ -124,6 +124,25 @@ const client = new MongoClient(uri, {
         const result =await userCollection.insertOne(user)
         res.send(result)
       })
+
+
+      // check user admin role 
+      app.get('/user/admin/:email',VerifyToken,async(req,res)=>{
+        console.log('hitting for role')
+        const email= req.params.email;
+        if(email!== req.decoded.email){
+          return res.status(403).send({massage:'unAuthorized access'})
+        }
+
+        const user = await userCollection.findOne({
+          userEmail:email})
+          let Admin= false;
+          if(user){
+            Admin = user?.role ==="Admin"
+
+          }
+          res.send({Admin})
+      })
       // UserApi to make Admin 
       app.patch('/user/Admin/:id',async(req,res)=>{
         const id=req.params.id;
